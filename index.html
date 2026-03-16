@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body>
+    <div class="box">
+        <form class="weatherform">
+            <input type="text" id="inputfield" placeholder="Enter city">
+            <button type="button" id="getweather">Get Weather</button>
+
+        </form>
+        <div class="container" style="display:none">
+            <h1 class="cityDisplay">hyderabad</h1>
+            <p class="tempDisplay">90&deg;f</p>
+            <p class="humidityDisplay">humidity:75</p>
+            <p class="descDisplay">clear sky</p>
+
+        </div>
+    </div>
+    <script>
+        let city = document.getElementById("inputfield");
+        let temp = document.querySelector(".tempDisplay")
+        let desc = document.querySelector(".descDisplay");
+        let btn = document.getElementById("getweather");
+        let cityname = document.querySelector(".cityDisplay");
+        let humi = document.querySelector(".humidityDisplay");
+        let con = document.querySelector(".container");
+
+        const apikey = 'c1cc1a13457df4507748e1597567e9c1';
+        btn.onclick = function () {
+            if (city.value == "") {
+                alert("enter city name");
+            }
+            else {
+                con.style.display = "flex";
+                loc = city.value;
+                url = `https://api.openweathermap.org/data/2.5/weather?q=${loc}&appid=${apikey}`;
+                fetch(url).then(res => res.json())
+                    .then(data => {
+                        console.log(data);
+                        const { name } = data
+                        const { feels_like } = data.main
+                        const { humidity } = data.main
+                        const { description } = data.weather[0]
+                        const val = Math.floor(feels_like - 273);
+                        temp.innerText = `${val}°C`;
+                        cityname.innerText = name;
+                        desc.innerText = description;
+                        humi.innerText = humidity + "%";
+                    })
+                    .catch(() => {
+                        alert("enter valid loaction");
+                    })
+                city.value = "";
+            }
+        }
+    </script>
+</body>
+
+</html>
